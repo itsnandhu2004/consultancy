@@ -13,6 +13,7 @@ if (!isset($_SESSION['login'])) {
     $sql = "SELECT * FROM bookings WHERE user_email = :email ORDER BY booking_date DESC";
     $query = $dbh->prepare($sql);
     $query->bindParam(':email', $email, PDO::PARAM_STR);
+    
     $query->execute();
     $bookings = $query->fetchAll(PDO::FETCH_OBJ);
 

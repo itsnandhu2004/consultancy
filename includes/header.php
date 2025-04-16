@@ -84,7 +84,7 @@
         <ul class="nav navbar-nav">
           <li><a href="index.php">Home</a></li>
           <li><a href="about.php">About Us</a></li>
-          <li><a href="car-listing.php">Camera Rental</a></li>
+          <li><a href="camera-listing.php">Camera Rental</a></li>
           <li><a href="calendar.php">Event Booking</a></li>
           <li><a href="contact-us.php">Contact Us</a></li>
         </ul>

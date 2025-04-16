@@ -24,7 +24,7 @@
                 <i class="fa fa-camera" style="color: white; margin-right: 8px;"></i> Cameras
             </a>
             <ul style="list-style: none; padding-left: 20px;">
-                <li><a href="post-avehical.php" style="color: white; text-decoration: none;">Post a Camera</a></li>
+                <li><a href="post-acamera.php" style="color: white; text-decoration: none;">Post a Camera</a></li>
                 <li><a href="manage-vehicles.php" style="color: white; text-decoration: none;">Manage Cameras</a></li>
             </ul>
         </li>
@@ -69,11 +69,7 @@
             </a>
         </li>
 
-        <li style="margin-bottom: 10px;">
-            <a href="manage-pages.php" style="color: white; text-decoration: none; display: block; padding: 8px 10px;">
-                <i class="fa fa-files-o" style="color: white; margin-right: 8px;"></i> Manage Pages
-            </a>
-        </li>
+        
 
         <li style="margin-bottom: 10px;">
             <a href="add-service.php" style="color: white; text-decoration: none; display: block; padding: 8px 10px;">

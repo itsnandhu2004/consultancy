@@ -126,7 +126,7 @@ if(strlen($_SESSION['alogin'])==0) {
                                                     <td><?php echo htmlentities($result->FuelType);?></td>
                                                     <td><?php echo htmlentities($result->ModelYear);?></td>
                                                     <td>
-                                                        <a href="edit-vehicle.php?id=<?php echo $result->id;?>" class="btn btn-success btn-sm">Edit</a>
+                                                        <a href="edit-camera.php?id=<?php echo $result->id;?>" class="btn btn-success btn-sm">Edit</a>
                                                         <a href="manage-vehicles.php?del=<?php echo $result->id;?>" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete?');">Delete</a>
                                                     </td>
                                                 </tr>

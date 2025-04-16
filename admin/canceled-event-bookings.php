@@ -80,7 +80,7 @@ try {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="page-title text-center">Cancelled Bookings</h2>
+                        <h2 class="page-title text-center">Cancelled Event Bookings</h2>
                         <div class="panel panel-default table-container">
                             <div class="panel-heading">Bookings Info</div>
                             <div class="panel-body">

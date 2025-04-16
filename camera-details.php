@@ -41,10 +41,10 @@ echo "<script type='text/javascript'> document.location = 'my-booking.php'; </sc
 else 
 {
 echo "<script>alert('Something went wrong. Please try again');</script>";
- echo "<script type='text/javascript'> document.location = 'car-listing.php'; </script>";
+ echo "<script type='text/javascript'> document.location = 'camera-listing.php'; </script>";
 } }  else{
  echo "<script>alert('Car already booked for these days');</script>"; 
- echo "<script type='text/javascript'> document.location = 'car-listing.php'; </script>";
+ echo "<script type='text/javascript'> document.location = 'camera-listing.php'; </script>";
 }
 
 }
@@ -341,7 +341,7 @@ $_SESSION['brndid']=$result->bid;
     
     <!--Similar-Cars-->
     <div class="similar_cars">
-      <h3>Similar Cars</h3>
+      <h3>Similar Cameras</h3>
       <div class="row">
 <?php 
 $bid=$_SESSION['brndid'];

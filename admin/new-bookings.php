@@ -75,7 +75,7 @@ if(strlen($_SESSION['alogin'])==0) {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="page-title text-center">New Bookings</h2>
+                        <h2 class="page-title text-center">New Camera Bookings</h2>
                         <div class="panel panel-default table-container">
                             <div class="panel-heading">Bookings Info</div>
                             <div class="panel-body">
@@ -113,7 +113,7 @@ if(strlen($_SESSION['alogin'])==0) {
                                                     <td><?php echo htmlentities($cnt);?></td>
                                                     <td><?php echo htmlentities($result->FullName);?></td>
                                                     <td><?php echo htmlentities($result->BookingNumber);?></td>
-                                                    <td><a href="edit-vehicle.php?id=<?php echo htmlentities($result->vid);?>">
+                                                    <td><a href="edit-camera.php?id=<?php echo htmlentities($result->vid);?>">
                                                         <?php echo htmlentities($result->BrandName) . ' , ' . htmlentities($result->VehiclesTitle);?></a>
                                                     </td>
                                                     <td><?php echo htmlentities($result->FromDate);?></td>

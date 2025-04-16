@@ -127,10 +127,10 @@ foreach($results as $result)
 
 <li>
     <h4 style="color:red">Booking No #<?php echo htmlentities($result->BookingNumber);?></h4>
-                <div class="vehicle_img"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" alt="image"></a> </div>
+                <div class="vehicle_img"> <a href="camera-details.php?vhid=<?php echo htmlentities($result->vid);?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" alt="image"></a> </div>
                 <div class="vehicle_title">
 
-                  <h6><a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>"> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
+                  <h6><a href="camera-details.php?vhid=<?php echo htmlentities($result->vid);?>"> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
                   <p><b>From </b> <?php echo htmlentities($result->FromDate);?> <b>To </b> <?php echo htmlentities($result->ToDate);?></p>
                   <div style="float: left"><p><b>Message:</b> <?php echo htmlentities($result->message);?> </p></div>
                 </div>
@@ -158,7 +158,7 @@ foreach($results as $result)
 <h5 style="color:blue">Invoice</h5>
 <table>
   <tr>
-    <th>Car Name</th>
+    <th>Camera Name</th>
     <th>From Date</th>
     <th>To Date</th>
     <th>Total Days</th>

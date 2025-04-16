@@ -189,7 +189,7 @@ foreach($results as $result)
 										</tr>
 											<tr>											
 											<th>Vehicle Name</th>
-											<td><a href="edit-vehicle.php?id=<?php echo htmlentities($result->vid);?>"><?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></td>
+											<td><a href="edit-camera.php?id=<?php echo htmlentities($result->vid);?>"><?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></td>
 											<th>Booking Date</th>
 											<td><?php echo htmlentities($result->PostingDate);?></td>
 										</tr>
