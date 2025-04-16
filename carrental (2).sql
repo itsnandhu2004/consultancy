@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2025 at 07:36 AM
+-- Generation Time: Apr 16, 2025 at 04:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -65,8 +65,11 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `event_id`, `event_name`, `user_email`, `date_range`, `slot_details`, `total_price`, `reference_image`, `booking_date`, `status`) VALUES
-(2, 4, 'Wedding Photography', 'abi123@gmail.com', '2025-03-30,2025-03-31', '{\"2025-03-30\":{\"slot_type\":\"Half-Day\",\"start_time\":\"\",\"end_time\":\"\"},\"2025-03-31\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 45000.00, NULL, '2025-03-28 06:38:01', 'cancelled'),
-(5, 4, 'Wedding Photography', 'nandhu@gmail.com', '2025-06-18,2025-06-19', '{\"2025-06-18\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"},\"2025-06-19\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 60000.00, NULL, '2025-03-28 10:53:51', 'confirmed');
+(13, 10, 'School/College Events', 'nandhiniv.22msc@kongu.edu', '2025-04-29,2025-04-30', '{\"2025-04-29\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"},\"2025-04-30\":{\"slot_type\":\"Half-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 45000.00, NULL, '2025-04-11 15:39:22', 'confirmed'),
+(14, 8, 'Birthday Parties', 'balachandrankk.22msc@kongu.edu', '2025-04-16,2025-04-17', '{\"2025-04-16\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"},\"2025-04-17\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 30000.00, NULL, '2025-04-12 06:04:47', 'cancelled'),
+(15, 6, 'Weddings', 'balachandrankk.22msc@kongu.edu', '2025-05-19', '{\"2025-05-19\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 100000.00, NULL, '2025-04-12 06:06:12', 'confirmed'),
+(16, 7, 'Corporate Events', 'sabarishv.22msc@kongu.edu', '2025-05-16,2025-05-17', '{\"2025-05-16\":{\"slot_type\":\"Half-Day\",\"start_time\":\"\",\"end_time\":\"\"},\"2025-05-17\":{\"slot_type\":\"Half-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 50000.00, NULL, '2025-04-12 06:16:15', 'pending'),
+(17, 6, 'Weddings', 'sabarishv.22msc@kongu.edu', '2025-04-29', '{\"2025-04-29\":{\"slot_type\":\"Full-Day\",\"start_time\":\"\",\"end_time\":\"\"}}', 100000.00, NULL, '2025-04-12 06:40:09', 'confirmed');
 
 -- --------------------------------------------------------
 
@@ -109,8 +112,12 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`id`, `event_name`, `base_price`) VALUES
-(4, 'Wedding Photography', 30000.00),
-(5, 'maternity shoot', 10000.00);
+(6, 'Weddings', 100000.00),
+(7, 'Corporate Events', 50000.00),
+(8, 'Birthday Parties', 15000.00),
+(9, 'Baby Showers', 20000.00),
+(10, 'School/College Events', 30000.00),
+(11, 'Workshops', 5000.00);
 
 -- --------------------------------------------------------
 
@@ -130,7 +137,7 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `service_name`, `service_description`, `image`) VALUES
-(2, 'Wedding', 'capture the moments with us', 'wedd.jpg');
+(2, 'Wedding Photography', 'Capture your most cherished moments with our premium Wedding Photography Services, designed to make your big day unforgettable', 'wedd.jpg');
 
 -- --------------------------------------------------------
 
@@ -156,11 +163,9 @@ CREATE TABLE `tblbooking` (
 --
 
 INSERT INTO `tblbooking` (`id`, `BookingNumber`, `userEmail`, `VehicleId`, `FromDate`, `ToDate`, `message`, `Status`, `PostingDate`, `LastUpdationDate`) VALUES
-(1, 443108139, 'amikt12@gmail.com', 2, '2024-06-08', '2024-06-10', 'I want booking', 1, '2024-06-05 05:32:39', '2024-06-05 05:34:08'),
-(2, 351643502, 'morganyj.22msc@kongu.edu', 13, '2025-04-29', '2025-04-30', 'i want this camera', 1, '2025-04-01 05:36:14', '2025-04-01 05:36:52'),
-(3, 955223953, 'morganyj.22msc@kongu.edu', 13, '2025-04-17', '2025-04-18', 'i want this', 2, '2025-04-01 05:44:42', '2025-04-01 05:45:25'),
-(4, 969031906, 'nandhu@gmail.com', 13, '2025-04-20', '2025-04-21', 'i want', 0, '2025-04-02 07:55:03', NULL),
-(5, 555558328, 'abinayabt.22msc@kongu.edu', 13, '2026-01-14', '2026-01-20', 'i want', 1, '2025-04-09 15:02:01', '2025-04-09 15:03:11');
+(6, 693316962, 'nandhiniv.22msc@kongu.edu', 14, '2025-04-22', '2025-04-23', 'i want this camera', 2, '2025-04-11 15:26:31', '2025-04-12 06:08:16'),
+(7, 436653854, 'balachandrankk.22msc@kongu.edu', 15, '2025-05-19', '2025-05-21', 'i need this camera', 1, '2025-04-12 06:07:34', '2025-04-12 06:08:00'),
+(8, 478381868, 'sabarishv.22msc@kongu.edu', 14, '2025-06-02', '2025-06-05', 'i want this camera for rental', 0, '2025-04-12 06:14:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -180,7 +185,9 @@ CREATE TABLE `tblbrands` (
 --
 
 INSERT INTO `tblbrands` (`id`, `BrandName`, `CreationDate`, `UpdationDate`) VALUES
-(10, 'Canon', '2025-03-27 15:39:23', '2025-03-28 14:53:51');
+(10, 'Canon', '2025-03-27 15:39:23', '2025-03-28 14:53:51'),
+(12, 'Nikon', '2025-04-11 14:08:53', NULL),
+(13, 'Sony', '2025-04-11 14:08:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -223,15 +230,9 @@ CREATE TABLE `tblcameras` (
 --
 
 INSERT INTO `tblcameras` (`id`, `VehiclesTitle`, `VehiclesBrand`, `VehiclesOverview`, `PricePerDay`, `FuelType`, `ModelYear`, `SeatingCapacity`, `Vimage1`, `Vimage2`, `Vimage3`, `Vimage4`, `Vimage5`, `AirConditioner`, `PowerDoorLocks`, `AntiLockBrakingSystem`, `BrakeAssist`, `PowerSteering`, `DriverAirbag`, `PassengerAirbag`, `PowerWindows`, `CDPlayer`, `CentralLocking`, `CrashSensor`, `LeatherSeats`, `RegDate`, `UpdationDate`) VALUES
-(1, 'Maruti Suzuki Wagon R', 1, 'Maruti Wagon R Latest Updates\r\n\r\nMaruti Suzuki has launched the BS6 Wagon R S-CNG in India. The LXI CNG and LXI (O) CNG variants now cost Rs 5.25 lakh and Rs 5.32 lakh respectively, up by Rs 19,000. Maruti claims a fuel economy of 32.52km per kg. The CNG Wagon R’s continuation in the BS6 era is part of the carmaker’s ‘Mission Green Million’ initiative announced at Auto Expo 2020.\r\n\r\nPreviously, the carmaker had updated the 1.0-litre powertrain to meet BS6 emission norms. It develops 68PS of power and 90Nm of torque, same as the BS4 unit. However, the updated motor now returns 21.79 kmpl, which is a little less than the BS4 unit’s 22.5kmpl claimed figure. Barring the CNG variants, the prices of the Wagon R 1.0-litre have been hiked by Rs 8,000.', 500, 'Petrol', 2019, 5, 'rear-3-4-left-589823254_930x620.jpg', 'tail-lamp-1666712219_930x620.jpg', 'rear-3-4-right-520328200_930x620.jpg', 'steering-close-up-1288209207_930x620.jpg', 'boot-with-standard-luggage-202327489_930x620.jpg', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:19'),
-(2, 'BMW 5 Series', 2, 'BMW 5 Series price starts at ? 55.4 Lakh and goes upto ? 68.39 Lakh. The price of Petrol version for 5 Series ranges between ? 55.4 Lakh - ? 60.89 Lakh and the price of Diesel version for 5 Series ranges between ? 60.89 Lakh - ? 68.39 Lakh.', 1000, 'Petrol', 2018, 5, 'BMW-5-Series-Exterior-102005.jpg', 'BMW-5-Series-New-Exterior-89729.jpg', 'BMW-5-Series-Exterior-102006.jpg', 'BMW-5-Series-Interior-102021.jpg', 'BMW-5-Series-Interior-102022.jpg', 1, 1, 1, 1, 1, 1, 1, 1, NULL, 1, 1, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(3, 'Audi Q8', 3, 'As per ARAI, the mileage of Q8 is 0 kmpl. Real mileage of the vehicle varies depending upon the driving habits. City and highway mileage figures also vary depending upon the road conditions.', 3000, 'Petrol', 2017, 5, 'audi-q8-front-view4.jpg', '1920x1080_MTC_XL_framed_Audi-Odessa-Armaturen_Spiegelung_CC_v05.jpg', 'audi1.jpg', '1audiq8.jpg', 'audi-q8-front-view4.jpeg', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(4, 'Nissan Kicks', 4, 'Latest Update: Nissan has launched the Kicks 2020 with a new turbocharged petrol engine. You can read more about it here.\r\n\r\nNissan Kicks Price and Variants: The Kicks is available in four variants: XL, XV, XV Premium, and XV Premium(O).', 800, 'Petrol', 2020, 5, 'front-left-side-47.jpg', 'kicksmodelimage.jpg', 'download.jpg', 'kicksmodelimage.jpg', '', 1, NULL, NULL, 1, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(5, 'Nissan GT-R', 4, ' The GT-R packs a 3.8-litre V6 twin-turbocharged petrol, which puts out 570PS of max power at 6800rpm and 637Nm of peak torque. The engine is mated to a 6-speed dual-clutch transmission in an all-wheel-drive setup. The 2+2 seater GT-R sprints from 0-100kmph in less than 3', 2000, 'Petrol', 2019, 5, 'Nissan-GTR-Right-Front-Three-Quarter-84895.jpg', 'Best-Nissan-Cars-in-India-New-and-Used-1.jpg', '2bb3bc938e734f462e45ed83be05165d.jpg', '2020-nissan-gtr-rakuda-tan-semi-aniline-leather-interior.jpg', 'images.jpg', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(6, 'Nissan Sunny 2020', 4, 'Value for money product and it was so good It is more spacious than other sedans It looks like a luxurious car.', 400, 'CNG', 2018, 5, 'Nissan-Sunny-Right-Front-Three-Quarter-48975_ol.jpg', 'images (1).jpg', 'Nissan-Sunny-Interior-114977.jpg', 'nissan-sunny-8a29f53-500x375.jpg', 'new-nissan-sunny-photo.jpg', 1, 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(7, 'Toyota Fortuner', 5, 'Toyota Fortuner Features: It is a premium seven-seater SUV loaded with features such as LED projector headlamps with LED DRLs, LED fog lamp, and power-adjustable and foldable ORVMs. Inside, the Fortuner offers features such as power-adjustable driver seat, automatic climate control, push-button stop/start, and cruise control.\r\n\r\nToyota Fortuner Safety Features: The Toyota Fortuner gets seven airbags, hill assist control, vehicle stability control with brake assist, and ABS with EBD.', 3000, 'Petrol', 2020, 5, '2015_Toyota_Fortuner_(New_Zealand).jpg', 'toyota-fortuner-legender-rear-quarters-6e57.jpg', 'zw-toyota-fortuner-2020-2.jpg', 'download (1).jpg', '', NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(8, 'Maruti Suzuki Vitara Brezza', 1, 'The new Vitara Brezza is a well-rounded package that is feature-loaded and offers good drivability. And it is backed by Maruti’s vast service network, which ensures a peace of mind to customers. The petrol motor could have been more refined and offered more pep.', 600, 'Petrol', 2018, 5, 'marutisuzuki-vitara-brezza-right-front-three-quarter3.jpg', 'marutisuzuki-vitara-brezza-rear-view37.jpg', 'marutisuzuki-vitara-brezza-dashboard10.jpg', 'marutisuzuki-vitara-brezza-boot-space59.jpg', 'marutisuzuki-vitara-brezza-boot-space28.jpg', NULL, 1, 1, 1, NULL, NULL, 1, NULL, NULL, NULL, 1, NULL, '2024-05-10 07:04:35', '2024-06-05 05:30:33'),
-(13, ' Canon EOS R5', 10, 'The Canon EOS R5 is a high-resolution full-frame mirrorless camera with cutting-edge autofocus and 8K video recording capabilities. It’s designed for professional photographers and videographers.', 10, 'RF lens', 2023, 45, 'canon1.jpg', 'canon2.jpg', 'canon3.jpg', NULL, NULL, NULL, 1, 1, NULL, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, '2025-03-27 17:13:10', '2025-03-31 06:31:07');
+(13, ' Canon EOS R5', 10, 'The Canon EOS R5 is a high-resolution full-frame mirrorless camera with cutting-edge autofocus and 8K video recording capabilities. It’s designed for professional photographers and videographers.', 2000, 'RF lens', 2023, 45, 'canon1.jpg', 'canon2.jpg', 'canon3.jpg', NULL, NULL, NULL, 1, 1, NULL, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, '2025-03-27 17:13:10', '2025-04-11 14:31:30'),
+(14, 'Nikon Z6 II', 12, 'The Nikon Z6 II is a versatile full-frame mirrorless camera built for both photo and video creators. It features dual EXPEED 6 processors for faster performance, improved autofocus, and 4K video capabilities. It\'s well-suited for weddings, wildlife, portraits, and events.', 1800, 'Z-mount lens', 2021, 25, 'n1.jpg', 'n2.jpg', 'n3.jpg', 'n4.jpg', 'n5.jpg', 1, 1, 1, 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, '2025-04-11 14:19:00', '2025-04-11 14:30:55'),
+(15, 'Sony Alpha A7 III', 13, 'The Sony A7 III is a powerful and highly capable full-frame mirrorless camera designed for both enthusiasts and professionals. It delivers excellent image quality, low-light performance, and 4K video recording. Ideal for weddings, street photography, portraits, and filmmaking.', 2500, 'EF lens', 2018, 24, 's1.jpg', 's2.jpg', 's3.jpg', 's4.jpg', 's5.jpg', 1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-04-11 14:38:19', '2025-04-11 14:39:05');
 
 -- --------------------------------------------------------
 
@@ -274,11 +275,7 @@ CREATE TABLE `tblcontactusquery` (
 --
 
 INSERT INTO `tblcontactusquery` (`id`, `name`, `EmailId`, `ContactNumber`, `Message`, `PostingDate`, `status`) VALUES
-(1, 'Kunal ', 'kunal@gmail.com', '7977779798', 'I want to know you brach in Chandigarh?', '2024-06-04 09:34:51', 1),
-(2, 'Nandhini V', 'nandhu@gmail.com', '7200852922', 'i want to talk', '2025-03-27 16:29:52', 1),
-(3, 'Nandhini V', 'nandhu@gmail.com', '7200852922', 'i want to talk', '2025-03-27 16:30:32', 1),
-(4, 'Nandhini V', 'nandhu@gmail.com', '7200852922', 'i want to talk', '2025-03-27 16:53:20', 1),
-(5, 'Morgany J', 'morganyj.22msc@kongu.edu', '7200852922', 'i want to speak', '2025-04-07 06:22:13', 1);
+(6, 'Sabarish', 'sabarishv.22msc@kongu.edu', '7373731298', 'i have queries in event booking', '2025-04-12 06:26:21', 1);
 
 -- --------------------------------------------------------
 
@@ -306,26 +303,6 @@ INSERT INTO `tblpages` (`id`, `PageName`, `type`, `detail`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tblsubscribers`
---
-
-CREATE TABLE `tblsubscribers` (
-  `id` int(11) NOT NULL,
-  `SubscriberEmail` varchar(120) DEFAULT NULL,
-  `PostingDate` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
---
--- Dumping data for table `tblsubscribers`
---
-
-INSERT INTO `tblsubscribers` (`id`, `SubscriberEmail`, `PostingDate`) VALUES
-(4, 'harish@gmail.com', '2024-06-01 09:26:21'),
-(5, 'kunal@gmail.com', '2024-05-31 09:35:07');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbltestimonial`
 --
 
@@ -342,7 +319,9 @@ CREATE TABLE `tbltestimonial` (
 --
 
 INSERT INTO `tbltestimonial` (`id`, `UserEmail`, `Testimonial`, `PostingDate`, `status`) VALUES
-(1, 'nandhu@gmail.com', 'i like this photography', '2025-03-28 10:47:00', 1);
+(2, 'nandhiniv.22msc@kongu.edu', '?????\r\n“Snappy Boys exceeded all our expectations!”\r\nWorking with Snappy Boys was an absolute delight! Their creativity, professionalism, and attention to detail truly made a difference. From the very first conversation to the final delivery, they were proactive, responsive, and incredibly easy to work with. Our project wouldn’t have been the same without their fresh ideas and snappy execution.', '2025-04-11 15:06:03', NULL),
+(3, 'nandhiniv.22msc@kongu.edu', '\r\n“Snappy Boys exceeded all our expectations!”\r\nWorking with Snappy Boys was an absolute delight! Their creativity, professionalism, and attention to detail truly made a difference. From the very first conversation to the final delivery, they were proactive, responsive, and incredibly easy to work with. Our project wouldn’t have been the same without their fresh ideas and snappy execution.', '2025-04-11 15:06:35', 1),
+(4, 'balachandrankk.22msc@kongu.edu', '\"Snappy Boys Photography made our special day truly unforgettable! Their team was professional, friendly, and incredibly talented. Every moment — from candid smiles to emotional glances — was captured beautifully. The edits were stunning, and the turnaround time was quicker than expected. \"', '2025-04-12 06:09:35', 1);
 
 -- --------------------------------------------------------
 
@@ -369,11 +348,9 @@ CREATE TABLE `tblusers` (
 --
 
 INSERT INTO `tblusers` (`id`, `FullName`, `EmailId`, `Password`, `ContactNo`, `dob`, `Address`, `City`, `Country`, `RegDate`, `UpdationDate`) VALUES
-(3, 'Nandhini V', 'nandhu@gmail.com', 'e807f1fcf82d132f9bb018ca6738a19f', '7200852922', NULL, NULL, NULL, NULL, '2025-03-27 15:14:57', '2025-03-27 15:16:14'),
-(4, 'abi', 'abi123@gmail.com', 'e807f1fcf82d132f9bb018ca6738a19f', '8946038630', NULL, NULL, NULL, NULL, '2025-03-28 06:32:56', NULL),
-(7, 'Nandhini V', NULL, 'e807f1fcf82d132f9bb018ca6738a19f', '7200852922', NULL, NULL, NULL, NULL, '2025-03-29 02:49:01', NULL),
-(9, 'abinaya', 'abinayabt.22msc@kongu.edu', 'e807f1fcf82d132f9bb018ca6738a19f', '9235163190', NULL, NULL, NULL, NULL, '2025-03-29 06:03:05', NULL),
-(10, 'Morgany J', 'morganyj.22msc@kongu.edu', 'e807f1fcf82d132f9bb018ca6738a19f', '8201737261', NULL, NULL, NULL, NULL, '2025-03-29 06:26:36', NULL);
+(11, 'Nandhini V', 'nandhiniv.22msc@kongu.edu', 'e807f1fcf82d132f9bb018ca6738a19f', '7200852922', NULL, NULL, NULL, NULL, '2025-04-11 15:03:29', NULL),
+(12, 'Balachandran', 'balachandrankk.22msc@kongu.edu', '167194e2555537468b42aa5814b74eb7', '9865716893', NULL, NULL, NULL, NULL, '2025-04-12 06:03:16', NULL),
+(13, 'Sabarish', 'sabarishv.22msc@kongu.edu', 'e807f1fcf82d132f9bb018ca6738a19f', '7373731298', '12/12/2004', '2,palamettupudur,perundurai,erode', 'Erode', 'India', '2025-04-12 06:13:38', '2025-04-12 06:28:09');
 
 --
 -- Indexes for dumped tables
@@ -447,12 +424,6 @@ ALTER TABLE `tblpages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tblsubscribers`
---
-ALTER TABLE `tblsubscribers`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `tbltestimonial`
 --
 ALTER TABLE `tbltestimonial`
@@ -479,7 +450,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `camera_booking_saved_report`
@@ -491,31 +462,31 @@ ALTER TABLE `camera_booking_saved_report`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tblbooking`
 --
 ALTER TABLE `tblbooking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tblbrands`
 --
 ALTER TABLE `tblbrands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tblcameras`
 --
 ALTER TABLE `tblcameras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tblcontactusinfo`
@@ -527,7 +498,7 @@ ALTER TABLE `tblcontactusinfo`
 -- AUTO_INCREMENT for table `tblcontactusquery`
 --
 ALTER TABLE `tblcontactusquery`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tblpages`
@@ -536,22 +507,16 @@ ALTER TABLE `tblpages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `tblsubscribers`
---
-ALTER TABLE `tblsubscribers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT for table `tbltestimonial`
 --
 ALTER TABLE `tbltestimonial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tblusers`
 --
 ALTER TABLE `tblusers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
