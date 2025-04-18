@@ -198,14 +198,18 @@ if(strlen($_SESSION['alogin'])==0) {
                                 if($from && $to) $where .= " AND DATE(tblbooking.$date_type) BETWEEN :from AND :to";
 
                                 $sql = "SELECT tblusers.FullName, tblusers.EmailId, tblusers.ContactNo, 
-                                               tblbrands.BrandName, tblcameras.VehiclesTitle, 
-                                               tblbooking.FromDate, tblbooking.ToDate, tblbooking.BookingNumber, 
-                                               tblbooking.PostingDate, tblbooking.Status
-                                        FROM tblbooking 
-                                        JOIN tblcameras ON tblcameras.id = tblbooking.VehicleId
-                                        JOIN tblbrands ON tblbrands.id = tblcameras.VehiclesBrand
-                                        JOIN tblusers ON tblusers.EmailId = tblbooking.userEmail
-                                        $where ORDER BY tblbooking.$date_type DESC";
+               tblbrands.BrandName, tblcameras.VehiclesTitle, 
+               tblbooking.BookingNumber, tblbooking.userEmail, tblbooking.VehicleId, 
+               tblbooking.FromDate, tblbooking.ToDate, tblbooking.message, 
+               tblbooking.Status, tblbooking.payment_id, tblbooking.amount_paid, 
+               tblbooking.PostingDate, tblbooking.LastUpdationDate, 
+               tblbooking.totalPrice, tblbooking.razorpay_order_id
+        FROM tblbooking 
+        JOIN tblcameras ON tblcameras.id = tblbooking.VehicleId
+        JOIN tblbrands ON tblbrands.id = tblcameras.VehiclesBrand
+        JOIN tblusers ON tblusers.EmailId = tblbooking.userEmail
+        $where ORDER BY tblbooking.$date_type DESC";
+
 
                                 $query = $dbh->prepare($sql);
                                 if($status !== '') $query->bindParam(':status', $status, PDO::PARAM_INT);
@@ -229,47 +233,63 @@ if(strlen($_SESSION['alogin'])==0) {
 
                             <table id="reportTable" class="table table-bordered table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Booking No.</th>
-                                        <th>Camera</th>
-                                        <th>Status</th>
-                                        <th>From</th>
-                                        <th>To</th>
-                                        <th>Posting Date</th>
-                                    </tr>
+                                <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Booking No.</th>
+        <th>Vehicle</th>
+        <th>Status</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Posting Date</th>
+        <th>Last Update</th>
+        <th>Message</th>
+        <th>Payment ID</th>
+        <th>Amount Paid</th>
+        <th>Total Price</th>
+        <th>Razorpay Order ID</th>
+    </tr>
                                 </thead>
                                 <tbody>
-                                <?php 
-                                if($query->rowCount() > 0){
-                                    $cnt = 1;
-                                    foreach($results as $row){ ?>
-                                        <tr>
-                                            <td><?php echo htmlentities($cnt++); ?></td>
-                                            <td><?php echo htmlentities($row->FullName); ?></td>
-                                            <td><?php echo htmlentities($row->EmailId); ?></td>
-                                            <td><?php echo htmlentities($row->ContactNo); ?></td>
-                                            <td><?php echo htmlentities($row->BookingNumber); ?></td>
-                                            <td><?php echo htmlentities($row->BrandName . ' - ' . $row->VehiclesTitle); ?></td>
-                                            <td>
-                                                <?php
-                                                if($row->Status == 1) echo '<span class="badge bg-success">Confirmed</span>';
-                                                elseif($row->Status == 2) echo '<span class="badge bg-danger">Cancelled</span>';
-                                                else echo '<span class="badge bg-secondary">Pending</span>';
-                                                ?>
-                                            </td>
-                                            <td><?php echo htmlentities($row->FromDate); ?></td>
-                                            <td><?php echo htmlentities($row->ToDate); ?></td>
-                                            <td><?php echo htmlentities($row->PostingDate); ?></td>
-                                        </tr>
-                                    <?php } 
-                                } else { ?>
-                                    <tr><td colspan="10" class="text-center">No bookings found for this filter.</td></tr>
-                                <?php } ?>
-                                </tbody>
+    <?php 
+    if($query->rowCount() > 0){
+        $cnt = 1;
+        foreach($results as $row){ ?>
+            <tr>
+                <td><?php echo htmlentities($cnt++); ?></td>
+                <td><?php echo htmlentities($row->FullName); ?></td>
+                <td><?php echo htmlentities($row->EmailId); ?></td>
+                <td><?php echo htmlentities($row->ContactNo); ?></td>
+                <td><?php echo htmlentities($row->BookingNumber); ?></td>
+                <td><?php echo htmlentities($row->BrandName . ' - ' . $row->VehiclesTitle); ?></td>
+                
+                <td>
+                    <?php
+                    if($row->Status == "Pending Approval") echo '<span class="badge bg-warning">Pending Approval</span>';
+                    elseif($row->Status == "Awaiting Payment<") echo '<span class="badge bg-primary">Awaiting Payment</span>';
+                    elseif($row->Status == "Paid and Confirmed") echo '<span class="badge bg-success">Paid and Confirmed</span>';
+                    elseif($row->Status == "Cancelled") echo '<span class="badge bg-danger">Cancelled</span>';
+                    else echo '<span class="badge bg-secondary">Unknown</span>';
+                    ?>
+                </td>
+                       
+                <td><?php echo htmlentities($row->FromDate); ?></td>
+                <td><?php echo htmlentities($row->ToDate); ?></td>
+                <td><?php echo htmlentities($row->PostingDate); ?></td>
+                <td><?php echo htmlentities($row->LastUpdationDate); ?></td>
+                <td><?php echo htmlentities($row->message); ?></td>
+                <td><?php echo htmlentities($row->payment_id); ?></td>
+                <td><?php echo htmlentities($row->amount_paid); ?></td>
+                <td><?php echo htmlentities($row->totalPrice); ?></td>
+                <td><?php echo htmlentities($row->razorpay_order_id); ?></td>
+            </tr>
+        <?php } 
+    } else { ?>
+        <tr><td colspan="16" class="text-center">No bookings found for this filter.</td></tr>
+    <?php } ?>
+</tbody>
                             </table>
                             <?php } ?>
 

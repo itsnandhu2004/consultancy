@@ -39,7 +39,7 @@ if(isset($_POST['email'])) {
         $mail->Host = 'smtp.gmail.com'; // SMTP server
         $mail->SMTPAuth = true;
         $mail->Username = 'nandhini.info2004@gmail.com'; // Your email
-        $mail->Password = 'hvyv inhm gyfc tqxj'; // Your app password (enable 2FA & App Passwords)
+        $mail->Password = 'kprb pfov htxa curn'; // Your app password (enable 2FA & App Passwords)
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 

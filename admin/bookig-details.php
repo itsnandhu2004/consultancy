@@ -1,110 +1,94 @@
-<?php
-session_start();
-error_reporting(0);
-include('includes/config.php');
-if(strlen($_SESSION['alogin'])==0)
-	{	
-header('location:index.php');
-}
-else{
-if(isset($_REQUEST['eid']))
-	{
-$eid=intval($_GET['eid']);
-$status="2";
-$sql = "UPDATE tblbooking SET Status=:status WHERE  id=:eid";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':status',$status, PDO::PARAM_STR);
-$query-> bindParam(':eid',$eid, PDO::PARAM_STR);
-$query -> execute();
-  echo "<script>alert('Booking Successfully Cancelled');</script>";
-echo "<script type='text/javascript'> document.location = 'canceled-bookings.php; </script>";
-}
 
+<?php  
+session_start(); 
+error_reporting(0); 
+include('includes/config.php');  
 
-if(isset($_REQUEST['aeid']))
-	{
-$aeid=intval($_GET['aeid']);
-$status=1;
-
-$sql = "UPDATE tblbooking SET Status=:status WHERE  id=:aeid";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':status',$status, PDO::PARAM_STR);
-$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
-$query -> execute();
-echo "<script>alert('Booking Successfully Confirmed');</script>";
-echo "<script type='text/javascript'> document.location = 'confirmed-bookings.php'; </script>";
-}
-
-
- ?>
+if(strlen($_SESSION['alogin']) == 0) {        
+    header('location:index.php'); 
+    exit();
+} else {     
+    // Fetch booking details based on booking ID (use bid instead of id)
+    if (isset($_GET['bid'])) {
+        $sql = "     
+            SELECT          
+                b.id,          
+                u.FullName,          
+                u.EmailId AS UserEmail,          
+                b.BookingNumber AS BookingNo,          
+                CONCAT(br.BrandName, ' ', c.VehiclesTitle) AS Camera,          
+                b.FromDate,          
+                b.ToDate,          
+                b.status AS Status,          
+                ((DATEDIFF(b.ToDate, b.FromDate) + 1) * c.PricePerDay) AS totalPrice,          
+                b.PostingDate,          
+                b.userEmail      
+            FROM tblbooking b      
+            JOIN tblusers u ON u.EmailId = b.userEmail      
+            JOIN tblcameras c ON c.id = b.VehicleId      
+            JOIN tblbrands br ON br.id = c.VehiclesBrand      
+            WHERE b.id = :bookingId      
+            ORDER BY b.PostingDate DESC     
+        ";      
+        $query = $dbh->prepare($sql);     
+        $query->bindParam(':bookingId', $_GET['bid'], PDO::PARAM_INT);     
+        $query->execute();     
+        $booking = $query->fetch(PDO::FETCH_OBJ); 
+    } else {
+        // If bid parameter is not found
+        $booking = null;
+    }
+?>
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<meta name="theme-color" content="#3e454c">
-	
-	<title>Car Rental Portal | New Bookings   </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Snappy Boys Portal | New Bookings</title>
 
-	<!-- Font awesome -->
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<!-- Sandstone Bootstrap CSS -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<!-- Bootstrap Datatables -->
-	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
-	<!-- Bootstrap social button library -->
-	<link rel="stylesheet" href="css/bootstrap-social.css">
-	<!-- Bootstrap select -->
-	<link rel="stylesheet" href="css/bootstrap-select.css">
-	<!-- Bootstrap file input -->
-	<link rel="stylesheet" href="css/fileinput.min.css">
-	<!-- Awesome Bootstrap checkbox -->
-	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
-	<!-- Admin Stye -->
-	<link rel="stylesheet" href="css/style.css">
-  <style>
-		.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #fff;
-
-    border-left: 4px solid #dd3d36;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #fff;
-    border-left: 4px solid #5cb85c;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.panel-heading {
-			background-color: #2980b9 !important;
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .table-container {
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .panel {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .panel-heading {
+            background-color: #2980b9 !important;
             color: white !important;
             font-size: 20px;
             font-weight: bold;
             text-transform: uppercase;
             border-radius: 10px 10px 0 0;
         }
-		.table thead {
+        .table thead {
             background-color: #2980b9 !important;
             color: white !important;
             font-size: 16px;
             text-transform: uppercase;
             font-weight: bold;
         }
-        .table tbody tr:hover {
-            background-color:rgb(255, 255, 255) !important;
-            font-weight: bold;
-        }
-		.table tbody tr:nth-child(odd) {
+        .table tbody tr:nth-child(odd) {
             background-color: #ffffff !important;
         }
         .table tbody tr:nth-child(even) {
@@ -114,163 +98,141 @@ echo "<script type='text/javascript'> document.location = 'confirmed-bookings.ph
             background-color: #d6e9f9 !important;
             font-weight: bold;
         }
-		</style>
-
+        .btn-info {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Arial', sans-serif;
+            margin-top: 50px;
+        }
+        .container-fluid {
+            max-width: 960px;
+        }
+        .panel {
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .panel-heading {
+            background-color: #2980b9;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 12px 12px 0 0;
+        }
+        .table th {
+            width: 30%;
+        }
+        .table td {
+            padding: 10px;
+        }
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn {
+            width: 200px;
+            margin: 10px;
+            border-radius: 30px;
+            padding: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .alert {
+            text-align: center;
+            font-size: 18px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ffeb3b;
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-btn a {
+            color: #2980b9;
+            font-size: 18px;
+            text-decoration: none;
+            border: 2px solid #2980b9;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: all 0.3s ease-in-out;
+        }
+        .back-btn a:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
-	<?php include('includes/header.php');?>
+    <?php include('includes/header.php'); ?>
+    <div class="ts-main-content">
+        <?php include('includes/leftbar.php'); ?>
+        <div class="content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                <div class="col-md-12">                         
+                        <h2 class="page-title text-center">Booking Details</h2>                         
 
-	<div class="ts-main-content">
-		<?php include('includes/leftbar.php');?>
-		<div class="content-wrapper">
-			<div class="container-fluid">
+                        <?php if($booking) { ?>                         
+                            <div class="panel">                                 
+                                <div class="panel-heading">Booking Information</div>                                 
+                                <div class="panel-body">                                     
+                                    <table class="table table-hover">                                         
+                                        <tr><th>Booking Number</th><td><?php echo htmlentities($booking->BookingNo); ?></td></tr>                                         
+                                        <tr><th>Camera</th><td><?php echo htmlentities($booking->Camera); ?></td></tr>                                         
+                                        <tr><th>User Email</th><td><?php echo htmlentities($booking->UserEmail); ?></td></tr>                                         
+                                        <tr><th>Booking Status</th><td><?php echo htmlentities($booking->Status); ?></td></tr>                                         
+                                        <tr><th>From Date</th><td><?php echo htmlentities($booking->FromDate); ?></td></tr>                                         
+                                        <tr><th>To Date</th><td><?php echo htmlentities($booking->ToDate); ?></td></tr>                                         
+                                        <tr><th>Total Price</th><td>₹ <?php echo number_format($booking->totalPrice, 2); ?></td></tr>                                         
+                                        <tr><th>Posting Date</th><td><?php echo htmlentities($booking->PostingDate); ?></td></tr>                                     
+                                    </table>    
+                                                                 
+                                </div>                             
+                            </div>                         
+                        <?php } else { ?>                         
+                            <p class="alert alert-danger text-center">Booking not found or invalid ID!</p>                         
+                        <?php } ?>       
+                    </div>   
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- Scripts -->
+     <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script> 
+    <script src="assets/js/interface.js"></script> 
 
-				<div class="row">
-					<div class="col-md-12">
+   
 
-						<h2 class="page-title">Booking Details</h2>
-
-						<!-- Zero Configuration Table -->
-						<div class="panel panel-default">
-							<div class="panel-heading">Bookings Info</div>
-							<div class="panel-body">
-
-
-<div id="print">
-								<table border="1"  class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%"  >
-				
-									<tbody>
-
-									<?php 
-$bid=intval($_GET['bid']);
-									$sql = "SELECT tblusers.*,tblbrands.BrandName,tblcameras.VehiclesTitle,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.VehicleId as vid,tblbooking.Status,tblbooking.PostingDate,tblbooking.id,tblbooking.BookingNumber,
-DATEDIFF(tblbooking.ToDate,tblbooking.FromDate) as totalnodays,tblcameras.PricePerDay
-									  from tblbooking join tblcameras on tblcameras.id=tblbooking.VehicleId join tblusers on tblusers.EmailId=tblbooking.userEmail join tblbrands on tblcameras.VehiclesBrand=tblbrands.id where tblbooking.id=:bid";
-$query = $dbh -> prepare($sql);
-$query -> bindParam(':bid',$bid, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{				?>	
-	<h3 style="text-align:center; color:red">#<?php echo htmlentities($result->BookingNumber);?> Booking Details </h3>
-
-		<tr>
-											<th colspan="4" style="text-align:center;color:blue">User Details</th>
-										</tr>
-										<tr>
-											<th>Booking No.</th>
-											<td>#<?php echo htmlentities($result->BookingNumber);?></td>
-											<th>Name</th>
-											<td><?php echo htmlentities($result->FullName);?></td>
-										</tr>
-										<tr>											
-											<th>Email Id</th>
-											<td><?php echo htmlentities($result->EmailId);?></td>
-											<th>Contact No</th>
-											<td><?php echo htmlentities($result->ContactNo);?></td>
-										</tr>
-											<tr>											
-											<th>Address</th>
-											<td><?php echo htmlentities($result->Address);?></td>
-											<th>City</th>
-											<td><?php echo htmlentities($result->City);?></td>
-										</tr>
-											<tr>											
-											<th>Country</th>
-											<td colspan="3"><?php echo htmlentities($result->Country);?></td>
-										</tr>
-
-										<tr>
-											<th colspan="4" style="text-align:center;color:blue">Booking Details</th>
-										</tr>
-											<tr>											
-											<th>Vehicle Name</th>
-											<td><a href="edit-camera.php?id=<?php echo htmlentities($result->vid);?>"><?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></td>
-											<th>Booking Date</th>
-											<td><?php echo htmlentities($result->PostingDate);?></td>
-										</tr>
-										<tr>
-											<th>From Date</th>
-											<td><?php echo htmlentities($result->FromDate);?></td>
-											<th>To Date</th>
-											<td><?php echo htmlentities($result->ToDate);?></td>
-										</tr>
-<tr>
-	<th>Total Days</th>
-	<td><?php echo htmlentities($tdays=$result->totalnodays);?></td>
-	<th>Rent Per Days</th>
-	<td><?php echo htmlentities($ppdays=$result->PricePerDay);?></td>
-</tr>
-<tr>
-	<th colspan="3" style="text-align:center">Grand Total</th>
-	<td><?php echo htmlentities($tdays*$ppdays);?></td>
-</tr>
-<tr>
-<th>Booking Status</th>
-<td><?php 
-if($result->Status==0)
-{
-echo htmlentities('Not Confirmed yet');
-} else if ($result->Status==1) {
-echo htmlentities('Confirmed');
-}
- else{
- 	echo htmlentities('Cancelled');
- }
-										?></td>
-										<th>Last pdation Date</th>
-										<td><?php echo htmlentities($result->LastUpdationDate);?></td>
-									</tr>
-
-									<?php if($result->Status==0){ ?>
-										<tr>	
-										<td style="text-align:center" colspan="4">
-				<a href="bookig-details.php?aeid=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm this booking')" class="btn btn-primary"> Confirm Booking</a> 
-
-<a href="bookig-details.php?eid=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Cancel this Booking')" class="btn btn-danger"> Cancel Booking</a>
-</td>
-</tr>
-<?php } ?>
-										<?php $cnt=$cnt+1; }} ?>
-										
-									</tbody>
-								</table>
-								<form method="post">
-	   <input name="Submit2" type="submit" class="txtbox4" value="Print" onClick="return f3();" style="cursor: pointer;"  />
-	</form>
-
-							</div>
-						</div>
-
-					
-
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- Loading Scripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap-select.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.dataTables.min.js"></script>
-	<script src="js/dataTables.bootstrap.min.js"></script>
-	<script src="js/Chart.min.js"></script>
-	<script src="js/fileinput.js"></script>
-	<script src="js/chartData.js"></script>
-	<script src="js/main.js"></script>
-	<script language="javascript" type="text/javascript">
-function f3()
-{
-window.print(); 
-}
-</script>
+    <!-- Scripts -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>
+
 <?php } ?>
+

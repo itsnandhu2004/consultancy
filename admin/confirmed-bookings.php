@@ -93,14 +93,15 @@ if(strlen($_SESSION['alogin'])==0) {
                                             <th>From Date</th>
                                             <th>To Date</th>
                                             <th>Status</th>
+                                            <th>Total Price</th>
                                             <th>Posting Date</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php 
-                                        $status=1;
-                                        $sql = "SELECT tblusers.FullName,tblbrands.BrandName,tblcameras.VehiclesTitle,tblbooking.FromDate,tblbooking.ToDate,tblbooking.VehicleId as vid,tblbooking.Status,tblbooking.PostingDate,tblbooking.id,tblbooking.BookingNumber 
+                                        $status="Paid and Confirmed";
+                                        $sql = "SELECT tblusers.FullName,tblbrands.BrandName,tblcameras.VehiclesTitle,tblbooking.FromDate,tblbooking.ToDate,tblbooking.VehicleId as vid,tblbooking.Status,tblbooking.PostingDate,tblbooking.id,tblbooking.BookingNumber,tblbooking.totalPrice
                                                 FROM tblbooking 
                                                 JOIN tblcameras ON tblcameras.id=tblbooking.VehicleId 
                                                 JOIN tblusers ON tblusers.EmailId=tblbooking.userEmail 
@@ -123,11 +124,13 @@ if(strlen($_SESSION['alogin'])==0) {
                                                     <td><?php echo htmlentities($result->FromDate);?></td>
                                                     <td><?php echo htmlentities($result->ToDate);?></td>
                                                     <td>
-                                                        <?php echo ($result->Status == 1) ? '<span class="text-success">Confirmed</span>' : '<span class="text-danger">Cancelled</span>'; ?>
+                                                        <?php echo ($result->Status == "Paid and Confirmed") ? '<span class="text-success">Confirmed</span>' : '<span class="text-danger">Cancelled</span>'; ?>
                                                     </td>
+                                                    <td>₹<?php echo number_format($result->totalPrice, 2); ?></td>
                                                     <td><?php echo htmlentities($result->PostingDate);?></td>
                                                     <td>
 													<a href="bookig-details.php?bid=<?php echo htmlentities($result->id);?>"> View</a>
+                                                    
                                                     </td>
                                                 </tr>
                                             <?php $cnt++; } 
