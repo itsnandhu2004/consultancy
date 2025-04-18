@@ -95,6 +95,15 @@ if(strlen($_SESSION['alogin'])==0) {
         font-size: 9px !important;
         padding: 3px 5px !important;
     }
+    .table-container {
+    max-width: 100%;
+    overflow-x: auto;  /* This allows horizontal scrolling */
+    margin: 20px auto;
+}
+
+#reportTable {
+    min-width: 1200px;  /* Adjust this width depending on your table's column count and content */
+}
 }
     </style>
 </head>
@@ -138,14 +147,17 @@ if(strlen($_SESSION['alogin'])==0) {
                                             ?>
                                         </select>
                                     </div>
+                                    
                                     <div class="col-md-2">
-                                        <label>Status</label>
-                                        <select name="status" class="form-control">
-                                            <option value="">All</option>
-                                            <option value="1">Confirmed</option>
-                                            <option value="2">Cancelled</option>
-                                        </select>
-                                    </div>
+    <label>Status</label>
+    <select name="status" class="form-control">
+        <option value="">All</option>
+        <option value="Pending Approval">Pending Approval</option>
+        <option value="Awaiting Payment">Awaiting Payment</option>
+        <option value="Paid and Confirmed">Paid and Confirmed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+</div>
                                     <div class="col-md-2">
                                         <label>Date Type</label>
                                         <select name="date_type" class="form-control">
@@ -212,7 +224,7 @@ if(strlen($_SESSION['alogin'])==0) {
 
 
                                 $query = $dbh->prepare($sql);
-                                if($status !== '') $query->bindParam(':status', $status, PDO::PARAM_INT);
+                                if($status !== '') $query->bindParam(':status', $status, PDO::PARAM_STR);
                                 if($user !== '') $query->bindParam(':user', $user, PDO::PARAM_STR);
                                 if($brand !== '') $query->bindParam(':brand', $brand, PDO::PARAM_INT);
                                 if($from && $to) {
@@ -235,21 +247,16 @@ if(strlen($_SESSION['alogin'])==0) {
                                 <thead>
                                 <tr>
         <th>#</th>
-        <th>Name</th>
         <th>Email</th>
         <th>Phone</th>
         <th>Booking No.</th>
-        <th>Vehicle</th>
+        <th>Camera</th>
         <th>Status</th>
         <th>From</th>
         <th>To</th>
         <th>Posting Date</th>
-        <th>Last Update</th>
-        <th>Message</th>
-        <th>Payment ID</th>
         <th>Amount Paid</th>
-        <th>Total Price</th>
-        <th>Razorpay Order ID</th>
+       
     </tr>
                                 </thead>
                                 <tbody>
@@ -259,7 +266,6 @@ if(strlen($_SESSION['alogin'])==0) {
         foreach($results as $row){ ?>
             <tr>
                 <td><?php echo htmlentities($cnt++); ?></td>
-                <td><?php echo htmlentities($row->FullName); ?></td>
                 <td><?php echo htmlentities($row->EmailId); ?></td>
                 <td><?php echo htmlentities($row->ContactNo); ?></td>
                 <td><?php echo htmlentities($row->BookingNumber); ?></td>
@@ -278,12 +284,11 @@ if(strlen($_SESSION['alogin'])==0) {
                 <td><?php echo htmlentities($row->FromDate); ?></td>
                 <td><?php echo htmlentities($row->ToDate); ?></td>
                 <td><?php echo htmlentities($row->PostingDate); ?></td>
-                <td><?php echo htmlentities($row->LastUpdationDate); ?></td>
-                <td><?php echo htmlentities($row->message); ?></td>
-                <td><?php echo htmlentities($row->payment_id); ?></td>
+                
+                
+                
                 <td><?php echo htmlentities($row->amount_paid); ?></td>
-                <td><?php echo htmlentities($row->totalPrice); ?></td>
-                <td><?php echo htmlentities($row->razorpay_order_id); ?></td>
+                
             </tr>
         <?php } 
     } else { ?>
@@ -336,15 +341,16 @@ function updateDates(val) {
 function exportToExcel() {
     const table = document.getElementById("reportTable");
     const wb = XLSX.utils.table_to_book(table, { sheet: "Bookings" });
-    XLSX.writeFile(wb, "Confirmed_Bookings.xlsx");
+    XLSX.writeFile(wb, "Camera_Bookings_Report.xlsx");
 }
+
 
 async function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('landscape', 'pt', 'a4');
 
     doc.setFontSize(18);
-    doc.text("Confirmed Bookings Report", 40, 40);
+    doc.text("Camera Bookings Report", 40, 40);
 
     const table = document.getElementById("reportTable");
     const headers = [];
@@ -366,8 +372,9 @@ async function exportToPDF() {
         margin: { left: 40, right: 40 }
     });
 
-    doc.save("Confirmed_Bookings_Report.pdf");
+    doc.save("Camera_Bookings_Report.pdf");
 }
+
 </script>
 
 <script src="js/jquery.min.js"></script>

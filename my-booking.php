@@ -114,7 +114,23 @@ foreach($results as $result)
             <ul class="vehicle_listing">
 <?php 
 $useremail=$_SESSION['login'];
- $sql = "SELECT tblcameras.Vimage1 as Vimage1,tblcameras.VehiclesTitle,tblcameras.id as vid,tblbrands.BrandName,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.Status,tblcameras.PricePerDay,DATEDIFF(tblbooking.ToDate,tblbooking.FromDate) as totaldays,tblbooking.BookingNumber  from tblbooking join tblcameras on tblbooking.VehicleId=tblcameras.id join tblbrands on tblbrands.id=tblcameras.VehiclesBrand where tblbooking.userEmail=:useremail order by tblbooking.id desc";
+$sql = "SELECT tblcameras.Vimage1 as Vimage1,
+tblcameras.VehiclesTitle,
+tblcameras.id as vid,
+tblbrands.BrandName,
+tblbooking.FromDate,
+tblbooking.ToDate,
+tblbooking.message,
+tblbooking.Status,
+tblcameras.PricePerDay,
+(DATEDIFF(tblbooking.ToDate,tblbooking.FromDate) + 1) as totaldays,
+tblbooking.BookingNumber
+FROM tblbooking
+JOIN tblcameras ON tblbooking.VehicleId = tblcameras.id
+JOIN tblbrands ON tblbrands.id = tblcameras.VehiclesBrand
+WHERE tblbooking.userEmail = :useremail
+ORDER BY tblbooking.id DESC";
+
 $query = $dbh -> prepare($sql);
 $query-> bindParam(':useremail', $useremail, PDO::PARAM_STR);
 $query->execute();
