@@ -24,6 +24,13 @@ try {
 } catch (PDOException $e) {
     // Handle error
 }
+$blockedDates = [];
+try {
+    $stmt = $dbh->query("SELECT blocked_date FROM blocked_dates");
+    $blockedDates = $stmt->fetchAll(PDO::FETCH_COLUMN);
+} catch (PDOException $e) {
+    $blockedDates = [];
+}
 ?>
 <!doctype html>
 <html lang="en" class="no-js">
@@ -100,22 +107,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const bookedDates = <?php echo json_encode($bookedDates); ?>;
 
-    const events = bookedDates.map(date => ({
-        title: 'Booked',
-        start: date,
-        allDay: true,
-        backgroundColor: '#ff4d4d',
-        borderColor: '#cc0000'
-    }));
+    // Fetch blocked dates from PHP
+  
+    const blockedDates = <?php echo json_encode($blockedDates); ?>;
+
+    const allEvents = [
+        ...bookedDates.map(date => ({
+            title: 'Booked',
+            start: date,
+            allDay: true,
+            backgroundColor: '#ff4d4d',
+            borderColor: '#cc0000'
+        })),
+        ...blockedDates.map(date => ({
+            title: 'Blocked by Admin',
+            start: date,
+            allDay: true,
+            backgroundColor: '#6c757d',
+            borderColor: '#343a40'
+        }))
+    ];
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: 'auto',
-        events: events
+        events: allEvents,
+       dateClick: function (info) {
+    const clickedDate = info.dateStr;
+    const isBlocked = blockedDates.includes(clickedDate);
+    const action = isBlocked ? 'unblock' : 'block';
+
+    if (confirm(`Do you want to ${action.toUpperCase()} ${clickedDate}?`)) {
+        fetch('block-date-handler.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `date=${clickedDate}&action=${action}`
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            location.reload(); // Refresh calendar
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Something went wrong. Try again.');
+        });
+    }
+}
+
     });
 
     calendar.render();
 });
+
 </script>
 </body>
 </html>

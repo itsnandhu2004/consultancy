@@ -21,6 +21,10 @@ try {
             }
         }
     }
+    $blockedStmt = $dbh->query("SELECT blocked_date FROM blocked_dates");
+    $blockedDates = $blockedStmt->fetchAll(PDO::FETCH_COLUMN);
+    $unavailableDates = array_unique(array_merge($bookedDates, $blockedDates));
+    $bookedDates = array_unique(array_merge($bookedDates, $blockedDates));
 } catch (PDOException $e) {
     die("Database Query Failed: " . $e->getMessage());
 }
