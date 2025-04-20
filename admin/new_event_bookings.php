@@ -1,34 +1,131 @@
-
 <?php
 session_start();
-error_reporting(0);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 include('includes/config.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Razorpay\Api\Api;
+// Include PHPMailer
+require '../vendor/autoload.php';
 
 // Handle Confirm and Cancel Actions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $booking_id = $_POST['booking_id'];
     
-    if (isset($_POST['confirm'])) {
-        $status = "confirmed";
-    } elseif (isset($_POST['cancel'])) {
-        $status = "cancelled";
-    }
+    // Fetch booking details to get email and total price
+    $sql = "SELECT * FROM event_bookings WHERE booking_id = :booking_id AND status = 'Pending Approval'";
 
-    $sql = "UPDATE bookings SET status = :status WHERE id = :booking_id";
     $query = $dbh->prepare($sql);
-    $query->bindParam(':status', $status, PDO::PARAM_STR);
     $query->bindParam(':booking_id', $booking_id, PDO::PARAM_INT);
     $query->execute();
+    $booking = $query->fetch(PDO::FETCH_ASSOC);
+
+    // Check if booking exists
+    if (!$booking) {
+        echo "Booking not found or already processed.";
+        exit;
+    }
+
+    // Handle confirm or cancel
+    if (isset($_POST['confirm'])) {
+        // Update status to "Awaiting Payment"
+        $status = "Awaiting Payment";
+
+        // Razorpay Payment Link Generation
+        $api_key = 'rzp_test_X8TTnfXWnnhBBJ';
+        $api_secret = 'ZXuwXQNcIk943UYRsLB2oeRp';
+
+        // Create Razorpay Order
+        $razorpay = new Razorpay\Api\Api($api_key, $api_secret);
+        $orderData = [
+            'receipt'         => $booking_id,
+            'amount'          => $booking['total_price'] * 100,  // Price in paise
+            'currency'        => 'INR',
+            'payment_capture' => 1
+        ];
+
+        $order = $razorpay->order->create($orderData);
+        $razorpay_order_id = $order->id;
+
+        // Save Razorpay order ID in the database
+        $sql = "UPDATE event_bookings SET razorpay_order_id = :razorpay_order_id, status = :status WHERE booking_id = :booking_id";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':razorpay_order_id', $razorpay_order_id, PDO::PARAM_STR);
+        $query->bindParam(':status', $status, PDO::PARAM_STR);
+        $query->bindParam(':booking_id', $booking_id, PDO::PARAM_INT); // This ensures only the selected booking is updated
+        $query->execute();
+
+        // Send payment link to user's email
+        $paymentLink = "http://localhost/camerarental/razorpay_payment_page.php?order_id=" . $razorpay_order_id;
+
+        $mail = new PHPMailer(true);
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send email
+            $mail->SMTPAuth = true;
+            $mail->Username = 'nandhini.info2004@gmail.com'; // SMTP username
+            $mail->Password = 'kprb pfov htxa curn'; // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Recipients
+            $mail->setFrom('nandhini.info2004@gmail.com', 'Snappy Boys Photography');
+            $mail->addAddress($booking['user_email']); // User's email
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Payment Link for Your Event Booking';
+            $mail->Body    = "Dear Customer,<br><br>Your booking for the event '{$booking['event_name']}' has been confirmed. Please complete your payment using the following link: <br><br><a href='{$paymentLink}'>Pay Now</a><br><br>Thank you for choosing Snappy Boys Portal.";
+
+            // Send the email
+            $mail->send();
+            $_SESSION['email_sent'] = "Payment link has been sent to the user's email.";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
+
+    } elseif (isset($_POST['cancel'])) {
+        $status = "Cancelled";
+        
+        $sql = "UPDATE event_bookings SET status = :status WHERE booking_id = :booking_id";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':status', $status, PDO::PARAM_STR);
+        $query->bindParam(':booking_id', $booking_id, PDO::PARAM_INT);
+        $query->execute();
+    
+        $_SESSION['cancelled'] = "Booking has been cancelled.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    
 }
 
 // Fetch New Bookings
-$sql = "SELECT * FROM bookings WHERE status = 'pending'";
+$sql = "
+SELECT 
+    eb.booking_id, 
+    eb.event_name, 
+    eb.user_email, 
+    eb.event_dates, 
+    eb.total_price, 
+    eb.status, 
+    eb.booked_date, 
+    eb.razorpay_order_id, 
+    eb.razorpay_payment_id
+FROM event_bookings eb 
+WHERE eb.status IN ('Pending Approval', 'Awaiting Payment') 
+ORDER BY eb.booked_date DESC
+";
 $query = $dbh->prepare($sql);
 $query->execute();
 $results = $query->fetchAll(PDO::FETCH_ASSOC);
-?>
 
+?>
 
 <!doctype html>
 <html lang="en">
@@ -81,15 +178,15 @@ $results = $query->fetchAll(PDO::FETCH_ASSOC);
         }
         .table-hover tbody tr:hover {
             background-color: #d6e9f9 !important;
-            font-weight: bold;
+          
         }
     </style>
 </head>
 
 <body>
-    <?php include('includes/header.php');?>
+    <?php include('includes/header.php'); ?>
     <div class="ts-main-content">
-        <?php include('includes/leftbar.php');?>
+        <?php include('includes/leftbar.php'); ?>
         <div class="content-wrapper">
             <div class="container-fluid">
                 <div class="row">
@@ -104,52 +201,35 @@ $results = $query->fetchAll(PDO::FETCH_ASSOC);
                                             <th>#</th>
                                             <th>Event Name</th>
                                             <th>User Email</th>
-                                            <th>Date Range</th>
-                                            <th>Slot Details</th>
+                                            <th>Event Dates</th>
                                             <th>Total Price</th>
                                             <th>Booking Date</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php 
-                                        $sql = "SELECT * FROM bookings WHERE status = 'pending'";
-                                        $query = $dbh->prepare($sql);
-                                        $query->execute();
-                                        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-                                        $cnt = 1;
-                                        foreach ($results as $row) { ?>
-                                            <tr>
-                                                <td><?php echo htmlentities($cnt);?></td>
-                                                <td><?php echo htmlentities($row['event_name']);?></td>
-                                                <td><?php echo htmlentities($row['user_email']);?></td>
-                                                <td><?php echo htmlentities($row['date_range']);?></td>
-                                                <td><?php 
-                                                    $slot_details = json_decode($row['slot_details'], true);
-                                                    if (is_array($slot_details) && !empty($slot_details)) {
-                                                        foreach ($slot_details as $slot) {
-                                                            if (is_array($slot)) {
-                                                                echo "<strong>" . htmlentities($slot['date']) . ":</strong> " . htmlentities($slot['slot_type']) . "<br>";
-                                                            } else {
-                                                                echo "<strong>N/A:</strong> N/A<br>";
-                                                            }
-                                                        }
-                                                    } else {
-                                                        echo "No slot details available";
-                                                    }
-                                                ?></td>
-                                                <td><?php echo htmlentities($row['total_price']);?></td>
-                                                <td><?php echo htmlentities($row['booking_date']);?></td>
-                                                <td>
-                                                    <form method="POST">
-                                                        <input type="hidden" name="booking_id" value="<?php echo htmlentities($row['id']); ?>">
-                                                        <button type="submit" name="confirm" class="btn btn-success">Confirm</button>
-                                                        <button type="submit" name="cancel" class="btn btn-danger">Cancel</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        <?php $cnt++; } ?>
-                                    </tbody>
+<?php
+$cnt = 1;
+foreach ($results as $row) { ?>
+    <form method="POST"> <!-- Each booking has its own form -->
+        <tr>
+            <td><?php echo htmlentities($cnt); ?></td>
+            <td><?php echo htmlentities($row['event_name']); ?></td>
+            <td><?php echo isset($row['user_email']) ? htmlentities($row['user_email']) : 'Not Available'; ?></td>
+            <td><?php echo htmlentities($row['event_dates']); ?></td>
+            <td><?php echo htmlentities($row['total_price']); ?></td>
+            <td><?php echo htmlentities($row['booked_date']); ?></td>
+            <td><?php echo isset($row['status']) ? htmlentities($row['status']) : 'Not Available'; ?></td>
+            <td>
+                <input type="hidden" name="booking_id" value="<?php echo htmlentities($row['booking_id']); ?>"> <!-- hidden booking_id -->
+                <button type="submit" name="confirm" class="btn btn-success" onclick="return confirm('Are you sure you want to send the payment link to the customer?');">Confirm</button>
+                <button type="submit" name="cancel" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
+            </td>
+        </tr>
+    </form> <!-- Close the form for each row -->
+<?php $cnt++; } ?>
+</tbody>
                                 </table>
                             </div>
                         </div>
@@ -158,13 +238,36 @@ $results = $query->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
+    <?php if (isset($_SESSION['email_sent'])): ?>
+        <script>
+            alert("<?php echo $_SESSION['email_sent']; ?>");
+        </script>
+        <?php unset($_SESSION['email_sent']); ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['cancelled'])): ?>
+    <script>
+        alert("<?php echo $_SESSION['cancelled']; ?>");
+    </script>
+    <?php unset($_SESSION['cancelled']); ?>
+<?php endif; ?>
 
-    <!-- Scripts -->
+    <script>
+        function confirmSendPayment() {
+            return confirm('Are you sure you want to send the payment link to the customer?');
+        }
+    </script>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.dataTables.min.js"></script>
-    <script src="js/dataTables.bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+	<!-- Loading Scripts -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap-select.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	<script src="js/Chart.min.js"></script>
+	<script src="js/fileinput.js"></script>
+	<script src="js/chartData.js"></script>
+	<script src="js/main.js"></script>
 </body>
-</html>
 
+</html>

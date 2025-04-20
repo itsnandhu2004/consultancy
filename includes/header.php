@@ -87,6 +87,7 @@
           <li><a href="camera-listing.php">Camera Rental</a></li>
           <li><a href="calendar.php">Event Booking</a></li>
           <li><a href="contact-us.php">Contact Us</a></li>
+          <li><a href="e_bookings.php">Event Booking2</a></li>
         </ul>
       </div>
     </div>

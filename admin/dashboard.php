@@ -11,7 +11,7 @@ if(strlen($_SESSION['alogin'])==0) {
 // Fetch booked dates from DB
 $bookedDates = [];
 try {
-    $stmt = $dbh->prepare("SELECT date_range FROM bookings WHERE status = 'confirmed'");
+    $stmt = $dbh->prepare("SELECT date_range FROM event_bookings WHERE status = 'Pending Approval'");
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
